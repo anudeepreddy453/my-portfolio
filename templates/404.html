@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}Page not found — {{ profile.short_name }}{% endblock %}
+
+{% block content %}
+<section class="section section-light error-section">
+  <div class="shell narrow">
+    <p class="eyebrow">404</p>
+    <h1 class="section-title">That page is not here.</h1>
+    <p class="section-lead">
+      The link may be outdated, or the project slug may be wrong.
+    </p>
+    <div class="cta-row">
+      <a class="btn btn-accent" href="/">Back to home</a>
+      <a class="btn btn-ghost-light" href="/#projects">View projects</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

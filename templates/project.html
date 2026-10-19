@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block title %}{{ project.title }} — {{ profile.short_name }}{% endblock %}
+
+{% block content %}
+<article class="section section-paper project-detail" style="padding-top: 3.25rem;">
+  <div class="shell narrow">
+    <p class="eyebrow">
+      <a href="/#projects">Projects</a>
+      <span aria-hidden="true"> / </span>
+      Case study
+    </p>
+    <h1 class="section-title">{{ project.title }}</h1>
+    <p class="project-subtitle detail-subtitle">{{ project.subtitle }}</p>
+    <p class="section-lead prose">{{ project.summary }}</p>
+
+    <div class="detail-preview">
+      {% include "partials/project_preview.html" %}
+    </div>
+
+    <section class="detail-block">
+      <h2>The problem</h2>
+      <p>{{ project.purpose }}</p>
+    </section>
+
+    <section class="detail-block">
+      <h2>Verified capabilities</h2>
+      <ul class="bullet-list">
+        {% for feature in project.features %}
+        <li>{{ feature }}</li>
+        {% endfor %}
+      </ul>
+    </section>
+
+    {% if project.ai_extension %}
+    <section class="detail-block ai-extension">
+      <h2>{{ project.ai_extension.title }}</h2>
+      <p>{{ project.ai_extension.summary }}</p>
+      <ul class="bullet-list">
+        {% for feature in project.ai_extension.features %}
+        <li>{{ feature }}</li>
+        {% endfor %}
+      </ul>
+    </section>
+    {% endif %}
+
+    <section class="detail-block">
+      <h2>Engineering value</h2>
+      <p>{{ project.engineering_value }}</p>
+    </section>
+
+    <section class="detail-block">
+      <h2>Technology</h2>
+      <ul class="tech-list">
+        {% for tech in project.tech %}
+        <li>{{ tech }}</li>
+        {% endfor %}
+      </ul>
+    </section>
+
+    {% if project.note %}
+    <p class="note">{{ project.note }}</p>
+    {% endif %}
+
+    <div class="cta-row" style="margin-top: 2rem;">
+      <a class="btn btn-accent" href="/#projects">All projects</a>
+      <a class="btn btn-ghost-ink" href="{{ profile.resume_path }}" download>Download resume</a>
+    </div>
+  </div>
+</article>
+{% endblock %}

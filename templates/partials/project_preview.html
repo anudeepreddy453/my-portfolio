@@ -1,0 +1,81 @@
+{# Illustrative HTML/CSS previews — synthetic data only #}
+<figure class="illus illus-{{ project.preview }}" aria-label="{{ project.illustration_note }}">
+  {% if project.preview == 'dashboard' %}
+  <div class="illus-chrome">
+    <span></span><span></span><span></span>
+    <p class="illus-title">Production Status · Sample App</p>
+  </div>
+  <div class="illus-toolbar">
+    <span class="illus-chip">Search</span>
+    <span class="illus-chip">Date range</span>
+    <span class="illus-chip">Filter</span>
+  </div>
+  <div class="illus-stats">
+    <div><strong>OK</strong><span>128</span></div>
+    <div><strong>Watch</strong><span>7</span></div>
+    <div><strong>Issue</strong><span>3</span></div>
+  </div>
+  <table class="illus-table">
+    <thead>
+      <tr><th>App</th><th>Status</th><th>Updated</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Sample-A</td><td><i class="dot ok"></i> Complete</td><td>09:12</td></tr>
+      <tr><td>Sample-B</td><td><i class="dot warn"></i> Delayed</td><td>09:18</td></tr>
+      <tr><td>Sample-C</td><td><i class="dot bad"></i> Open PRB</td><td>09:21</td></tr>
+    </tbody>
+  </table>
+  <div class="illus-chart" aria-hidden="true">
+    <span style="--h:45%"></span><span style="--h:70%"></span>
+    <span style="--h:55%"></span><span style="--h:82%"></span>
+    <span style="--h:60%"></span>
+  </div>
+  {% elif project.preview == 'festival' %}
+  <div class="illus-chrome">
+    <span></span><span></span><span></span>
+    <p class="illus-title">Festival Ops · Demo Village</p>
+  </div>
+  <div class="illus-festival-grid">
+    <div class="illus-panel">
+      <p>Year</p>
+      <strong>2026</strong>
+    </div>
+    <div class="illus-panel">
+      <p>Donations</p>
+      <strong>₹1,24,000*</strong>
+    </div>
+    <div class="illus-panel">
+      <p>Expenses</p>
+      <strong>₹86,500*</strong>
+    </div>
+    <div class="illus-panel wide">
+      <p>Schedule</p>
+      <ul>
+        <li>Morning aarti · 07:00</li>
+        <li>Community event · 18:30</li>
+        <li>Auction window · 20:00</li>
+      </ul>
+    </div>
+  </div>
+  {% else %}
+  <div class="illus-chrome">
+    <span></span><span></span><span></span>
+    <p class="illus-title">Data pipeline · Illustrative</p>
+  </div>
+  <div class="illus-pipeline">
+    <div>Sources</div>
+    <span aria-hidden="true">→</span>
+    <div>Transform</div>
+    <span aria-hidden="true">→</span>
+    <div>Validate</div>
+    <span aria-hidden="true">→</span>
+    <div>Report</div>
+  </div>
+  <ul class="illus-pipeline-notes">
+    <li>Python · SQL · PySpark</li>
+    <li>Multi-source extract</li>
+    <li>Analytics-ready output</li>
+  </ul>
+  {% endif %}
+  <figcaption class="illus-caption">{{ project.illustration_note }}</figcaption>
+</figure>

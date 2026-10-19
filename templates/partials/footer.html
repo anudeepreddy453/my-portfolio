@@ -1,0 +1,26 @@
+<footer class="site-footer">
+  <div class="shell footer-inner">
+    <div class="footer-brand">
+      <p class="footer-name">{{ profile.name }}</p>
+      <p class="footer-meta">{{ profile.headline }}</p>
+      <p class="footer-meta">{{ profile.location }}</p>
+    </div>
+    <ul class="footer-links">
+      <li>
+        <a href="mailto:{{ profile.email }}">{{ profile.email }}</a>
+      </li>
+      <li>
+        <a href="{{ profile.linkedin }}" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </li>
+      <li>
+        <a href="{{ profile.resume_path }}" download>Download resume</a>
+      </li>
+      <li>
+        <a href="#projects">Projects</a>
+      </li>
+    </ul>
+    <p class="footer-copy">
+      &copy; {{ profile.short_name }}. Built with Flask, HTML, and CSS.
+    </p>
+  </div>
+</footer>
