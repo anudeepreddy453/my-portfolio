@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import sys
+from datetime import date
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -13,15 +14,31 @@ from app import app  # noqa: E402
 import content  # noqa: E402
 
 
+def test_experience_years_from_career_start():
+    assert content.CAREER_START == date(2023, 8, 3)
+    assert content.years_of_experience(date(2023, 8, 2)) == 0
+    assert content.years_of_experience(date(2023, 8, 3)) == 0
+    assert content.years_of_experience(date(2024, 8, 2)) == 0
+    assert content.years_of_experience(date(2024, 8, 3)) == 1
+    assert content.years_of_experience(date(2026, 8, 2)) == 2
+    assert content.years_of_experience(date(2026, 8, 3)) == 3
+    assert content.years_of_experience(date(2026, 10, 19)) == 3
+    assert content.experience_label(date(2026, 10, 19)) == "3+ years"
+    about = content.get_profile(date(2026, 10, 19))["about"]
+    assert "3+ years of experience" in about
+
+
 def test_home_ok():
     client = app.test_client()
     response = client.get("/")
     assert response.status_code == 200
     html = response.get_data(as_text=True)
-    assert content.PROFILE["name"] in html or content.PROFILE["short_name"] in html
+    profile = content.get_profile()
+    assert profile["name"] in html or profile["short_name"] in html
+    assert f"{profile['experience_label']} of experience" in html
     assert "Explore My Work" in html
     assert "Production Status Dashboard" in html
-    assert content.PROFILE["portrait"] in html
+    assert profile["portrait"] in html
     assert "village-landscape" in html
     assert "7995551276" not in html
     assert "/images/certificates/azure-fundamentals.jpg" in html

@@ -1,51 +1,82 @@
 """Portfolio content — single source of truth for templates."""
 
-PROFILE = {
-    "name": "Pulikunta Anudeep Kumar Reddy",
-    "short_name": "Anudeep Reddy",
-    "headline": (
-        "Software Engineer | Python Development | Production Automation "
-        "| Data Dashboards | AI Integration"
-    ),
-    "location": "Bengaluru, India",
-    "hero_location": "Pulikunta",
-    "hero_maps_url": (
-        "https://www.google.com/maps/dir/?api=1"
-        "&destination=Pulikunta,+Andhra+Pradesh+516267"
-    ),
-    "email": "anudeepreddy453@gmail.com",
-    "linkedin": "https://www.linkedin.com/in/anudeepreddy-pulikunta/",
-    "resume_path": "/resume.pdf",
-    "portrait": "/images/portrait/anudeep-portrait.jpg",
-    "portrait_alt": "Portrait of Pulikunta Anudeep Kumar Reddy",
-    "hero_image": "/images/hero/village-landscape.jpg",
-    "hero_image_sm": "/images/hero/village-landscape-sm.jpg",
-    "hero_image_alt": (
-        "Countryside landscape photograph of Anudeep Reddy’s village, "
-        "taken by the author"
-    ),
-    "hero_title": (
-        "Building reliable Python systems, production dashboards, "
-        "and AI-assisted engineering workflows."
-    ),
-    "hero_strengths": (
-        "Python · Flask · production automation · operational dashboards · "
-        "SQL · AI / LLM evaluation"
-    ),
-    "about": (
-        "Software Engineer with 3+ years of experience building Python "
-        "applications, production automation, and operational dashboards. "
-        "Based in Bengaluru, I turn manual workflows into maintainable "
-        "systems—covering data processing, production monitoring, REST "
-        "integrations, and practical AI/LLM evaluation in engineering work. "
-        "Outside delivery I stay curious about AI tooling, chess, and sports."
-    ),
-    "highlights": [
-        "3+ years software engineering",
-        "Python & backend systems",
-        "AI / LLM evaluation",
-    ],
-}
+from __future__ import annotations
+
+from datetime import date
+
+# Professional journey start — experience years are derived from this date.
+CAREER_START = date(2023, 8, 3)
+
+
+def years_of_experience(as_of: date | None = None) -> int:
+    """Completed full years since CAREER_START (never negative)."""
+    today = as_of or date.today()
+    years = today.year - CAREER_START.year
+    if (today.month, today.day) < (CAREER_START.month, CAREER_START.day):
+        years -= 1
+    return max(years, 0)
+
+
+def experience_label(as_of: date | None = None) -> str:
+    """Recruiter-style label, e.g. '3+ years'."""
+    return f"{years_of_experience(as_of)}+ years"
+
+
+def get_profile(as_of: date | None = None) -> dict:
+    """Profile dict with experience text computed from CAREER_START."""
+    label = experience_label(as_of)
+    return {
+        "name": "Pulikunta Anudeep Kumar Reddy",
+        "short_name": "Anudeep Reddy",
+        "headline": (
+            "Software Engineer | Python Development | Production Automation "
+            "| Data Dashboards | AI Integration"
+        ),
+        "location": "Bengaluru, India",
+        "hero_location": "Pulikunta",
+        "hero_maps_url": (
+            "https://www.google.com/maps/dir/?api=1"
+            "&destination=Pulikunta,+Andhra+Pradesh+516267"
+        ),
+        "email": "anudeepreddy453@gmail.com",
+        "linkedin": "https://www.linkedin.com/in/anudeepreddy-pulikunta/",
+        "resume_path": "/resume.pdf",
+        "portrait": "/images/portrait/anudeep-portrait.jpg",
+        "portrait_alt": "Portrait of Pulikunta Anudeep Kumar Reddy",
+        "hero_image": "/images/hero/village-landscape.jpg",
+        "hero_image_sm": "/images/hero/village-landscape-sm.jpg",
+        "hero_image_alt": (
+            "Countryside landscape photograph of Anudeep Reddy’s village, "
+            "taken by the author"
+        ),
+        "hero_title": (
+            "Building reliable Python systems, production dashboards, "
+            "and AI-assisted engineering workflows."
+        ),
+        "hero_strengths": (
+            "Python · Flask · production automation · operational dashboards · "
+            "SQL · AI / LLM evaluation"
+        ),
+        "years_experience": years_of_experience(as_of),
+        "experience_label": label,
+        "about": (
+            f"Software Engineer with {label} of experience building Python "
+            "applications, production automation, and operational dashboards. "
+            "Based in Bengaluru, I turn manual workflows into maintainable "
+            "systems—covering data processing, production monitoring, REST "
+            "integrations, and practical AI/LLM evaluation in engineering work. "
+            "Outside delivery I stay curious about AI tooling, chess, and sports."
+        ),
+        "highlights": [
+            f"{label} software engineering",
+            "Python & backend systems",
+            "AI / LLM evaluation",
+        ],
+    }
+
+
+# Default snapshot for imports/tests that expect a PROFILE mapping.
+PROFILE = get_profile()
 
 EXPERIENCE = [
     {

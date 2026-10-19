@@ -19,7 +19,8 @@ app = Flask(
 @app.context_processor
 def inject_globals():
     return {
-        "profile": content.PROFILE,
+        # Recomputed on each request so experience years stay current.
+        "profile": content.get_profile(),
         "nav_items": [
             ("About", "/#about"),
             ("Experience", "/#experience"),
