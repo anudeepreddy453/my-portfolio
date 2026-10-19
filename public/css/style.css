@@ -288,6 +288,7 @@ a:hover { color: var(--ink); }
 .hero {
   position: relative;
   min-height: 100svh;
+  min-height: 100dvh;
   display: grid;
   align-items: start;
   color: var(--hero-ink);
@@ -1319,9 +1320,12 @@ a:hover { color: var(--ink); }
 
 .footer-links a:hover { color: #e2c48a; }
 
-/* Short viewports: tighten type, keep intro copy visible */
+/* Short viewports: tighten type, but keep hero full-viewport so About never peeks */
 @media (max-height: 820px) {
-  .hero { min-height: auto; }
+  .hero {
+    min-height: 100svh;
+    min-height: 100dvh;
+  }
   .hero-stage { padding: calc(var(--header-h) + 1.1rem) 0 2.75rem; }
   .hero-name { font-size: clamp(2.35rem, 5.8vw, 3.85rem); }
   .hero-strengths { margin-bottom: 1rem; font-size: 0.85rem; }

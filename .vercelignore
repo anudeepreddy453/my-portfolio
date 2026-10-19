@@ -4,5 +4,6 @@ __pycache__/
 .pytest_cache/
 *.log
 .git/
-certificates/
-Resume/
+# Only ignore source/archive folders at repo root — keep public/certificates and public/images/certificates
+/certificates/
+/Resume/
