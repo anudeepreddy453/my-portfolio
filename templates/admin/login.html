@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Admin sign in</title>
+  <link rel="stylesheet" href="/css/admin.css?v=admin-1">
+</head>
+<body class="login-body">
+  <main class="login-card">
+    <p class="kicker">Private</p>
+    <h1>Visitor intelligence</h1>
+    <p class="lede">Sign in to review location and visit records. This area is only for the site owner.</p>
+    {% if not configured %}
+    <p class="error">Set VISITOR_ADMIN_PASSWORD before this sign-in can succeed.</p>
+    {% endif %}
+    {% if error %}<p class="error">{{ error }}</p>{% endif %}
+    <form method="post" action="/admin/login">
+      <input type="hidden" name="csrf" value="{{ csrf_token }}">
+      <label for="password">Password</label>
+      <input id="password" name="password" type="password" autocomplete="current-password" required>
+      <button type="submit">Sign in</button>
+    </form>
+  </main>
+</body>
+</html>

@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}Privacy policy — {{ profile.short_name }}{% endblock %}
+
+{% block content %}
+<section class="section section-light">
+  <div class="shell narrow">
+    <p class="eyebrow">Privacy · notice {{ notice_version }}</p>
+    <h1 class="section-title">How visitor information is handled</h1>
+    <div class="prose">
+      <p>This portfolio stays closed until the browser shares a one-time location reading and the server accepts it. That request is a location permission, not a security check and not proof of identity.</p>
+      <h2>Precise location</h2>
+      <p>If you choose Enable location &amp; continue, the browser asks for permission with its own prompt. After you allow it, the site reads latitude, longitude, accuracy in meters, and the reading’s timestamp once. It does not keep watching your location.</p>
+      <p>If you deny permission, dismiss the prompt, or the browser cannot provide a location, the portfolio stays closed.</p>
+      <h2>Approximate network location</h2>
+      <p>The server also sees the IP address that connected to this site. From that address it may look up an approximate country, region, city, and network provider. That result is an IP estimate. It is not GPS, and it is not a street address.</p>
+      <h2>Device and pages</h2>
+      <p>The site records ordinary request details: browser and operating system from the user agent, language, time zone, screen size if you continue, the page you opened, and the referring site. It does not build a hidden browser fingerprint.</p>
+      <h2>How this is used</h2>
+      <p>{{ profile.short_name }} uses these records to see where visits come from and how the site is used. They are not sold or shared with unrelated third parties. IP geolocation uses the configured lookup provider only to estimate the network location.</p>
+      <h2>How long it is kept</h2>
+      <p>GPS coordinates and IP coordinates are removed after {{ gps_days }} days. Session and page history are removed after {{ activity_days }} days. A granted visit stays open for {{ session_hours }} hours, then the location step is required again.</p>
+      <h2>Your request</h2>
+      <p>To ask about a visit record, or to ask for deletion, email <a href="mailto:{{ profile.email }}">{{ profile.email }}</a>. Include the approximate time of the visit. The site owner can delete a visitor record, delete stored GPS coordinates, or revoke a session from the private admin dashboard.</p>
+    </div>
+    <p><a href="/">Back to the portfolio gate</a></p>
+  </div>
+</section>
+{% endblock %}

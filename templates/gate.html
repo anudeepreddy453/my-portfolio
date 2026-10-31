@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="csrf-token" content="{{ csrf_token }}">
+  <title>Location access required — {{ profile.short_name }}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,560;640&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/css/gate.css?v=gate-1">
+</head>
+<body data-rate-limited="{{ '1' if rate_limited else '0' }}">
+  <div class="gate" id="gate">
+    <div class="gate-bg" aria-hidden="true">
+      <img src="{{ profile.hero_image }}" alt="">
+      <div class="gate-bg-copy">
+        <p>{{ profile.short_name }}</p>
+        <p>Software Engineer</p>
+      </div>
+    </div>
+    <div class="gate-dim" aria-hidden="true"></div>
+
+    <section class="gate-card" role="dialog" aria-modal="true" aria-labelledby="gate-title">
+      <div class="gate-radar" aria-hidden="true">
+        <span></span>
+        <span></span>
+        <svg viewBox="0 0 24 24" width="22" height="22">
+          <path fill="currentColor" d="M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5z"/>
+        </svg>
+      </div>
+      <p class="gate-kicker">LOCATION ACCESS REQUIRED</p>
+      <h1 id="gate-title">Before You Explore</h1>
+      <p id="gate-copy">Welcome to my personal portfolio. To view this website, please enable location access. This helps me understand where visitors are connecting from and improve the experience.</p>
+      <p class="gate-privacy" id="gate-privacy">Your location is collected only after you grant browser permission. IP-based location and device information may also be used for visitor analytics. This is not a security verification.</p>
+      <p class="gate-status" id="gate-status" role="status" aria-live="polite"></p>
+      <button class="gate-button" id="gate-enable" type="button">ENABLE LOCATION &amp; CONTINUE</button>
+      <p class="gate-required">Location access is required to view this portfolio.</p>
+      <p class="gate-policy"><a href="/privacy">Privacy Policy</a></p>
+
+      <div class="gate-guide" id="gate-guide">
+        <p class="guide-label">Where the browser prompt appears</p>
+        <div class="guide-diagram" aria-hidden="true">
+          <div class="guide-browser">
+            <div class="guide-bar"><span></span><i id="guide-spot"></i></div>
+            <div class="guide-body"></div>
+          </div>
+        </div>
+        <p class="guide-caption">Guide only. This is not a permission dialog, and it cannot grant access.</p>
+        <p class="guide-text" id="guide-text">Your browser shows its own location prompt. Only that prompt can allow access. Choose Allow there, then this page will continue.</p>
+      </div>
+      <noscript>
+        <p class="gate-noscript">JavaScript is required to request browser location permission. This portfolio stays locked when scripts are turned off.</p>
+      </noscript>
+    </section>
+  </div>
+  <script src="/js/gate.js?v=gate-1" defer></script>
+</body>
+</html>

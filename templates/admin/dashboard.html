@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Visitor intelligence</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,560&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/admin.css?v=admin-3">
+</head>
+<body>
+  <div class="shell">
+    <aside class="nav">
+      <p class="brand">Anudeep <span>Intelligence</span></p>
+      <nav>
+        <button type="button" data-panel="overview" class="is-active">Overview</button>
+        <button type="button" data-panel="live">Live visitors</button>
+        <button type="button" data-panel="records">Visitor records</button>
+        <button type="button" data-panel="devices">Devices &amp; browsers</button>
+        <button type="button" data-panel="sources">Traffic sources</button>
+        <button type="button" data-panel="permissions">Location permissions</button>
+        <button type="button" data-panel="privacy">Privacy &amp; retention</button>
+        <button type="button" data-panel="settings">Settings</button>
+      </nav>
+      <button type="button" id="logout" class="ghost">Sign out</button>
+    </aside>
+    <main>
+      <p class="banner" id="storage-banner" hidden></p>
+      <section id="panel-overview" class="panel"></section>
+      <section id="panel-live" class="panel" hidden></section>
+      <section id="panel-records" class="panel" hidden></section>
+      <section id="panel-devices" class="panel" hidden></section>
+      <section id="panel-sources" class="panel" hidden></section>
+      <section id="panel-permissions" class="panel" hidden></section>
+      <section id="panel-privacy" class="panel" hidden>
+        <header class="panel-head"><h1>Privacy &amp; retention</h1></header>
+        <div class="card prose">
+          <p>Precise GPS is stored only after the visitor uses the browser’s own permission prompt. Click a coordinate to open that point in Google Maps. IP location is an estimate and is labeled that way.</p>
+          <p>Coordinates are not a home address and are not an identity. Two visits from one network are listed as separate sessions.</p>
+          <p>Use a visitor record to delete that record, delete GPS coordinates, or revoke the session. Visitors can also email the address published on the privacy policy.</p>
+          <p><a href="/privacy" target="_blank" rel="noopener">Open the public privacy policy</a></p>
+        </div>
+      </section>
+      <section id="panel-settings" class="panel" hidden></section>
+    </main>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="/js/admin.js?v=admin-3"></script>
+</body>
+</html>
