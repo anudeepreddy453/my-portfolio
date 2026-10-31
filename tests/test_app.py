@@ -218,6 +218,11 @@ def test_resume_downloads_after_grant_and_admin_can_revoke():
     resume = client.get("/resume.pdf")
     assert resume.status_code == 200
     assert resume.data.startswith(b"%PDF")
+    assert resume.headers["Content-Disposition"].startswith("attachment")
+    certificate = client.get("/certificates/azure-fundamentals.pdf")
+    assert certificate.status_code == 200
+    assert certificate.data.startswith(b"%PDF")
+    assert certificate.headers["Content-Disposition"].startswith("inline")
     from itsdangerous import URLSafeTimedSerializer
 
     cookie = client.get_cookie("pv_s")

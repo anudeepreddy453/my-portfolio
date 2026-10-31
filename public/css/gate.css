@@ -27,6 +27,8 @@ body.is-locked {
   background: rgba(0, 0, 0, 0.08);
 }
 
+.gate-card[hidden] { display: none; }
+
 .gate-card {
   width: min(21rem, 100%);
   padding: 0.55rem;

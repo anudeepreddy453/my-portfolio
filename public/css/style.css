@@ -573,28 +573,15 @@ a:hover { color: var(--ink); }
 }
 
 .about-head {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  gap: 0.85rem 1.15rem;
-  align-items: start;
   margin-bottom: 1.1rem;
 }
 
-.about-index {
-  display: block;
-  font-size: clamp(3rem, 4.8vw, 4.1rem);
-  line-height: 0.88;
-  padding-top: 0.08rem;
-  color: rgba(184, 148, 77, 0.32);
-  letter-spacing: -0.04em;
-}
-
-.about-intro .eyebrow {
+.about-head .eyebrow {
   margin-bottom: 0.45rem;
 }
 
 .about-title {
-  max-width: 15.5ch;
+  max-width: 18ch;
   margin: 0;
   line-height: 1.14;
 }
@@ -1212,6 +1199,8 @@ a:hover { color: var(--ink); }
 }
 
 .achievement-card {
+  display: flex;
+  flex-direction: column;
   border: 1px solid var(--line);
   background: var(--white);
   overflow: hidden;
@@ -1219,23 +1208,103 @@ a:hover { color: var(--ink); }
 
 .achievement-photo {
   display: block;
+  position: relative;
   background: #ebe8e0;
-  aspect-ratio: 4 / 3;
-  max-height: 14rem;
+  aspect-ratio: 1400 / 1098;
   overflow: hidden;
 }
 
 .achievement-photo img {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  object-position: top center;
+  max-width: none;
+  object-fit: contain;
+  object-position: center center;
   transition: transform 500ms ease;
 }
 
 .achievement-card:hover .achievement-photo img { transform: scale(1.03); }
 
 .achievement-body { padding: 1rem 1.05rem 1.15rem; }
+
+/* Certificates and sports only — light iOS glass. The rest of the page stays editorial. */
+#credentials .cred-card,
+#credentials .achievement-card,
+#credentials .resume-only,
+#credentials .more-docs {
+  border-radius: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  background: rgba(255, 255, 255, 0.62);
+  color: #1c1c1e;
+  box-shadow:
+    0 12px 32px rgba(18, 19, 26, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(22px) saturate(160%);
+  -webkit-backdrop-filter: blur(22px) saturate(160%);
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
+  letter-spacing: -0.011em;
+}
+
+#credentials .cred-card:hover,
+#credentials .achievement-card:hover {
+  border-color: rgba(10, 132, 255, 0.35);
+}
+
+#credentials .cred-body h3,
+#credentials .achievement-body h4,
+#credentials .more-docs summary,
+#credentials .resume-only strong {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
+  color: #1c1c1e;
+  letter-spacing: -0.02em;
+}
+
+#credentials .cred-body .muted,
+#credentials .cred-note,
+#credentials .achievement-body .muted,
+#credentials .resume-only span,
+#credentials .resume-only-label {
+  color: #6e6e73;
+}
+
+#credentials .cred-card .text-link {
+  color: #007aff;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+#credentials .cred-card .text-link:hover { color: #005ecb; }
+
+#credentials .cred-preview,
+#credentials .achievement-photo {
+  position: relative;
+  background: #f2f2f7;
+  max-height: none;
+}
+
+#credentials .cred-preview {
+  aspect-ratio: 16 / 10;
+}
+
+#credentials .cred-preview img,
+#credentials .achievement-photo img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: contain;
+  object-position: center center;
+}
+
+#credentials .more-docs summary { cursor: pointer; }
+#credentials .block-title {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
+  color: #1c1c1e;
+  letter-spacing: -0.02em;
+}
 
 .contact-layout {
   display: grid;
@@ -1370,7 +1439,7 @@ a:hover { color: var(--ink); }
     max-width: 18ch;
   }
 
-  .section-index:not(.inline):not(.about-index) { display: none; }
+  .section-index:not(.inline) { display: none; }
   .section-aside-note { justify-self: start; text-align: left; }
   .piece-split .project-visual { order: 0; }
   .skill-group:nth-child(even) {
@@ -1438,15 +1507,6 @@ a:hover { color: var(--ink); }
 }
 
 @media (max-width: 560px) {
-  .about-head {
-    grid-template-columns: 1fr;
-    gap: 0.35rem;
-  }
-
-  .about-index {
-    font-size: 2.6rem;
-  }
-
   .about-title {
     max-width: none;
   }
@@ -1463,7 +1523,6 @@ a:hover { color: var(--ink); }
 
   .cred-preview { max-height: 10rem; }
   .cred-compact .cred-preview { max-height: 7.5rem; }
-  .achievement-photo { max-height: 12rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -179,7 +179,7 @@ def certificate_pdf(name: str):
     return send_file(
         path,
         mimetype="application/pdf",
-        as_attachment=True,
+        as_attachment=False,
         download_name=path.name,
         max_age=0,
     )
