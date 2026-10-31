@@ -28,6 +28,9 @@ Set these in `.env` (never commit that file):
 - `IPGEO_PROVIDER` (`ipwho`, `ipinfo`, or `none`)
 - `IPINFO_TOKEN` when using ipinfo
 - `VISITOR_DB_PATH` for a persistent SQLite file. On Vercel the default path is temporary, so visitor records there do not survive a restart.
+- `RESEND_API_KEY` to email `VISITOR_NOTIFY_EMAIL` once when a visitor allows location. Leave it unset to skip email. The default sender is Resend’s onboarding address, which delivers only to the Resend account email until a domain is verified.
+- `VISITOR_NOTIFY_EMAIL` (default `anudeepreddy453@gmail.com`)
+- `VISITOR_NOTIFY_FROM` (default `Portfolio <onboarding@resend.dev>`)
 
 ## Deploy
 

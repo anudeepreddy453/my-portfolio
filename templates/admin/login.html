@@ -5,10 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow">
   <title>Admin sign in</title>
-  <link rel="stylesheet" href="/css/admin.css?v=admin-1">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/admin.css?v=admin-8">
 </head>
-<body class="login-body">
-  <main class="login-card">
+<body class="admin-body login-body">
+  <div class="ambient" aria-hidden="true"></div>
+  <main class="login-card glass-panel">
     <p class="kicker">Private</p>
     <h1>Visitor intelligence</h1>
     <p class="lede">Sign in to review location and visit records. This area is only for the site owner.</p>
@@ -20,7 +24,7 @@
       <input type="hidden" name="csrf" value="{{ csrf_token }}">
       <label for="password">Password</label>
       <input id="password" name="password" type="password" autocomplete="current-password" required>
-      <button type="submit">Sign in</button>
+      <button class="primary" type="submit">Sign in</button>
     </form>
   </main>
 </body>

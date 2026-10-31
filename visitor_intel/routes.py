@@ -12,7 +12,7 @@ from datetime import datetime, timezone
 
 from flask import Blueprint, abort, jsonify, redirect, request, session
 
-from visitor_intel import store
+from visitor_intel import notify, store
 from visitor_intel.access import attach, client_ip, csrf_ok, refresh_session_cookie
 from visitor_intel.net import NOTICE_VERSION, clean_label, clean_metric, clean_path
 
@@ -76,7 +76,7 @@ def access_location():
     if latitude is None or longitude is None or accuracy is None:
         store.add_permission_event(row["session_key"], "server_rejected")
         return jsonify({"ok": False, "unlocked": False, "error": "Location reading was incomplete."}), 400
-    saved = store.store_gps(
+    saved, first_grant = store.store_gps(
         row["session_key"],
         latitude=latitude,
         longitude=longitude,
@@ -93,6 +93,8 @@ def access_location():
         store.add_permission_event(row["session_key"], "server_rejected")
         return jsonify({"ok": False, "unlocked": False, "error": "Location could not be saved."}), 400
     refresh_session_cookie()
+    if first_grant:
+        notify.visit_granted(store.visit_summary(row["session_key"]))
     return jsonify({"ok": True, "unlocked": True})
 
 

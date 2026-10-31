@@ -7,46 +7,72 @@
   <title>Visitor intelligence</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,560&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/admin.css?v=admin-3">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/admin.css?v=admin-8">
 </head>
-<body>
+<body class="admin-body">
+  <div class="ambient" aria-hidden="true"></div>
   <div class="shell">
-    <aside class="nav">
-      <p class="brand">Anudeep <span>Intelligence</span></p>
-      <nav>
-        <button type="button" data-panel="overview" class="is-active">Overview</button>
-        <button type="button" data-panel="live">Live visitors</button>
-        <button type="button" data-panel="records">Visitor records</button>
-        <button type="button" data-panel="devices">Devices &amp; browsers</button>
-        <button type="button" data-panel="sources">Traffic sources</button>
-        <button type="button" data-panel="permissions">Location permissions</button>
-        <button type="button" data-panel="privacy">Privacy &amp; retention</button>
-        <button type="button" data-panel="settings">Settings</button>
-      </nav>
-      <button type="button" id="logout" class="ghost">Sign out</button>
-    </aside>
-    <main>
-      <p class="banner" id="storage-banner" hidden></p>
-      <section id="panel-overview" class="panel"></section>
-      <section id="panel-live" class="panel" hidden></section>
-      <section id="panel-records" class="panel" hidden></section>
-      <section id="panel-devices" class="panel" hidden></section>
-      <section id="panel-sources" class="panel" hidden></section>
-      <section id="panel-permissions" class="panel" hidden></section>
-      <section id="panel-privacy" class="panel" hidden>
-        <header class="panel-head"><h1>Privacy &amp; retention</h1></header>
-        <div class="card prose">
-          <p>Precise GPS is stored only after the visitor uses the browser’s own permission prompt. Click a coordinate to open that point in Google Maps. IP location is an estimate and is labeled that way.</p>
-          <p>Coordinates are not a home address and are not an identity. Two visits from one network are listed as separate sessions.</p>
-          <p>Use a visitor record to delete that record, delete GPS coordinates, or revoke the session. Visitors can also email the address published on the privacy policy.</p>
-          <p><a href="/privacy" target="_blank" rel="noopener">Open the public privacy policy</a></p>
+    <aside class="nav glass-panel">
+      <div class="brand">
+        <span class="mark" aria-hidden="true">A</span>
+        <div>
+          <strong>Visitors</strong>
+          <span>Anudeep</span>
         </div>
-      </section>
-      <section id="panel-settings" class="panel" hidden></section>
-    </main>
+      </div>
+      <nav aria-label="Dashboard">
+        <button type="button" data-panel="overview" class="is-active">
+          <i data-lucide="layout-dashboard"></i><span>Overview</span>
+        </button>
+        <button type="button" data-panel="live">
+          <i data-lucide="radio"></i><span>Live visitors</span>
+        </button>
+        <button type="button" data-panel="records">
+          <i data-lucide="users"></i><span>Visitor records</span>
+        </button>
+        <button type="button" data-panel="settings">
+          <i data-lucide="settings"></i><span>Settings</span>
+        </button>
+      </nav>
+      <div class="account">
+        <span class="avatar" aria-hidden="true">AR</span>
+        <div>
+          <strong>Anudeep</strong>
+          <span>Owner</span>
+        </div>
+        <button type="button" id="logout" aria-label="Sign out"><i data-lucide="log-out"></i></button>
+      </div>
+    </aside>
+    <div class="workspace">
+      <header class="topbar">
+        <div class="titles">
+          <p class="greeting">Welcome back, Anudeep</p>
+          <h1 id="page-title">Overview</h1>
+          <p id="page-copy">Monitor your website traffic and visitor activity.</p>
+        </div>
+        <div class="top-actions">
+          <time id="clock"></time>
+          <p class="live-pill" id="live-pill"><span class="dot"></span><span id="live-label">Checking</span></p>
+          <button type="button" id="refresh" class="icon-btn" aria-label="Refresh"><i data-lucide="refresh-cw"></i></button>
+          <button type="button" id="logout-mobile" class="icon-btn" aria-label="Sign out"><i data-lucide="log-out"></i></button>
+        </div>
+      </header>
+      <div id="storage-banner" class="toast glass-panel" hidden>
+        <i data-lucide="database"></i>
+        <p id="storage-text"></p>
+        <button type="button" id="storage-dismiss">Dismiss</button>
+      </div>
+      <main>
+        <section id="panel-overview" class="panel"></section>
+        <section id="panel-live" class="panel" hidden></section>
+        <section id="panel-records" class="panel" hidden></section>
+        <section id="panel-settings" class="panel" hidden></section>
+      </main>
+    </div>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-  <script src="/js/admin.js?v=admin-3"></script>
+  <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js"></script>
+  <script src="/js/admin.js?v=admin-8"></script>
 </body>
 </html>

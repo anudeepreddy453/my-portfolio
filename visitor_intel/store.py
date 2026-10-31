@@ -478,21 +478,22 @@ def record_outcome(session_key: str, status: str) -> None:
         )
 
 
-def store_gps(session_key: str, *, latitude: float, longitude: float, accuracy_m: float, position_at: str | None, device_extra: dict) -> bool:
+def store_gps(session_key: str, *, latitude: float, longitude: float, accuracy_m: float, position_at: str | None, device_extra: dict) -> tuple[bool, bool]:
+    """Save a GPS fix. Returns (saved, first_grant)."""
     current = now_iso()
     with db() as conn:
         row = conn.execute("SELECT access_status FROM sessions WHERE session_key = ?", (session_key,)).fetchone()
         if row is None:
-            return False
+            return False, False
         if row["access_status"] == "revoked":
-            return False
+            return False, False
         existing = conn.execute("SELECT latitude, deleted_at FROM gps WHERE session_key = ?", (session_key,)).fetchone()
         if existing and existing["latitude"] is not None:
             conn.execute(
                 "UPDATE sessions SET access_status = 'granted', consent_status = 'granted', last_activity_at = ? WHERE session_key = ? AND access_status != 'revoked'",
                 (current, session_key),
             )
-            return True
+            return True, False
         consent = conn.execute(
             "INSERT INTO consents (session_key, notice_version, consent_status, consented_at) VALUES (?, ?, 'granted', ?)",
             (session_key, NOTICE_VERSION, current),
@@ -526,7 +527,7 @@ def store_gps(session_key: str, *, latitude: float, longitude: float, accuracy_m
         )
         if device_extra:
             _insert_device(conn, session_key, device_extra)
-        return True
+        return True, True
 
 
 def touch(session_key: str, path: str, *, event_type: str, referrer: str | None = None) -> None:
@@ -670,6 +671,72 @@ def overview() -> dict:
     }
 
 
+def visit_summary(session_key: str) -> dict | None:
+    with db() as conn:
+        row = conn.execute(
+            """
+            SELECT s.visitor_key, s.session_key, s.started_at, s.access_status, s.consent_status,
+                   s.landing_path, s.referrer,
+                   v.visit_count,
+                   n.ip_address, n.ip_version, n.city, n.region, n.country, n.isp, n.asn,
+                   n.organization, n.latitude AS ip_latitude, n.longitude AS ip_longitude, n.provider,
+                   g.latitude, g.longitude, g.accuracy_m, g.captured_at, g.position_at,
+                   d.device_type, d.device_model, d.browser, d.browser_version, d.os_name, d.os_version,
+                   d.language, d.timezone AS device_timezone, d.screen_resolution, d.viewport
+            FROM sessions s
+            LEFT JOIN visitors v ON v.visitor_key = s.visitor_key
+            LEFT JOIN network n ON n.session_key = s.session_key
+            LEFT JOIN gps g ON g.session_key = s.session_key
+            LEFT JOIN devices d ON d.session_key = s.session_key
+            WHERE s.session_key = ?
+            """,
+            (session_key,),
+        ).fetchone()
+    if row is None:
+        return None
+    latitude = row["latitude"]
+    longitude = row["longitude"]
+    return {
+        "visitor_key": row["visitor_key"],
+        "session_key": row["session_key"],
+        "visit_count": row["visit_count"],
+        "started_at": row["started_at"],
+        "access_status": row["access_status"],
+        "consent_status": row["consent_status"],
+        "landing_path": row["landing_path"] or "/",
+        "referrer": row["referrer"],
+        "ip_address": row["ip_address"],
+        "ip_version": row["ip_version"],
+        "city": row["city"],
+        "region": row["region"],
+        "country": row["country"],
+        "isp": row["isp"],
+        "asn": row["asn"],
+        "organization": row["organization"],
+        "ip_latitude": row["ip_latitude"],
+        "ip_longitude": row["ip_longitude"],
+        "ip_maps_url": google_maps_url(row["ip_latitude"], row["ip_longitude"]),
+        "ip_provider": row["provider"],
+        "latitude": latitude,
+        "longitude": longitude,
+        "accuracy_m": row["accuracy_m"],
+        "captured_at": row["captured_at"],
+        "position_at": row["position_at"],
+        "device_type": row["device_type"],
+        "device_model": row["device_model"],
+        "browser": row["browser"],
+        "browser_version": row["browser_version"],
+        "os_name": row["os_name"],
+        "os_version": row["os_version"],
+        "language": row["language"],
+        "device_timezone": row["device_timezone"],
+        "screen_resolution": row["screen_resolution"],
+        "viewport": row["viewport"],
+        "maps_url": google_maps_url(latitude, longitude),
+        "timezone": timezone_name(),
+    }
+
+
 def google_maps_url(latitude, longitude) -> str | None:
     if latitude is None or longitude is None:
         return None
@@ -691,7 +758,7 @@ def live_visitors() -> list[dict]:
             SELECT s.session_key, s.visitor_key, s.started_at, s.last_activity_at, s.current_path,
                    n.ip_address, n.city, n.country,
                    g.latitude AS gps_lat, g.longitude AS gps_lng,
-                   d.device_type, d.browser
+                   d.device_type, d.browser, d.os_name
             FROM sessions s
             LEFT JOIN network n ON n.session_key = s.session_key
             LEFT JOIN gps g ON g.session_key = s.session_key
@@ -719,6 +786,7 @@ def live_visitors() -> list[dict]:
                 "maps_url": google_maps_url(row["gps_lat"], row["gps_lng"]),
                 "device": row["device_type"] or "Unavailable",
                 "browser": row["browser"] or "Unavailable",
+                "os": row["os_name"] or "Unavailable",
                 "first_seen": row["started_at"],
                 "last_active": row["last_activity_at"],
                 "duration_seconds": max(int((last - started).total_seconds()), 0),

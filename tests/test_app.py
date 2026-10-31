@@ -14,6 +14,7 @@ os.environ["VISITOR_DB_PATH"] = str(Path(tempfile.mkdtemp()) / "visitors.db")
 os.environ["VISITOR_ADMIN_PASSWORD"] = "test-admin-password"
 os.environ["FLASK_SECRET_KEY"] = "test-secret-key"
 os.environ["IPGEO_PROVIDER"] = "none"
+os.environ["RESEND_API_KEY"] = ""
 os.environ.pop("VERCEL", None)
 os.environ.pop("TRUST_PROXY", None)
 if str(ROOT) not in sys.path:
@@ -30,7 +31,7 @@ def unlock(client, *, lat=12.9716, lng=77.5946, forwarded_for=None):
     page = client.get("/", headers=headers)
     assert page.status_code == 200
     html = page.get_data(as_text=True)
-    assert "ENABLE LOCATION" in html
+    assert "Allow to continue" in html
     assert "Production Status Dashboard" not in html
     match = re.search(r'name="csrf-token" content="([^"]+)"', html)
     assert match
@@ -133,7 +134,7 @@ def test_no_duplicate_prodvision_name():
 def test_gate_blocks_documents_until_gps():
     client = app.test_client()
     home = client.get("/")
-    assert "Before You Explore" in home.get_data(as_text=True)
+    assert "Allow to continue" in home.get_data(as_text=True)
     resume = client.get("/resume.pdf")
     assert resume.status_code == 401
     assert b"%PDF" not in resume.data
@@ -223,4 +224,54 @@ def test_resume_downloads_after_grant_and_admin_can_revoke():
     )
     assert revoked.status_code == 200
     locked = client.get("/")
-    assert "Before You Explore" in locked.get_data(as_text=True)
+    assert "Allow to continue" in locked.get_data(as_text=True)
+
+
+def test_first_grant_prepares_one_visit_email(monkeypatch):
+    sent = []
+
+    def capture(message):
+        sent.append(message)
+
+    monkeypatch.setattr("visitor_intel.notify.deliver", capture)
+    monkeypatch.setenv("RESEND_API_KEY", "re_test")
+    monkeypatch.setenv("VISITOR_NOTIFY_EMAIL", "owner@example.com")
+    client = app.test_client()
+    token = unlock(client)
+    assert len(sent) == 1
+    message = sent[0]
+    assert message["to"] == ["owner@example.com"]
+    text = message["text"]
+    assert "GPS verified location" in text
+    assert "IP estimated location" in text
+    assert "12.9716, 77.5946" in text
+    assert text.count("https://www.google.com/maps/search/?api=1&query=12.9716,77.5946") == 1
+    assert "Accuracy: 18 m" in text
+    assert "Language: en-IN" in text
+    assert "Screen: 390x844" in text
+    assert "Viewport: 390x700" in text
+    assert "Time zone: Asia/Kolkata" in text
+    assert "203.0.113.50" not in text
+    assert "127.0.0.1" in text
+    again = client.post(
+        "/api/access/location",
+        json={
+            "latitude": 12.9716,
+            "longitude": 77.5946,
+            "accuracy": 18,
+            "timestamp": 1_730_000_000_000,
+        },
+        headers={"X-CSRF-Token": token},
+    )
+    assert again.status_code == 200
+    assert again.get_json()["unlocked"] is True
+    assert len(sent) == 1
+
+
+def test_visit_email_is_skipped_without_api_key(monkeypatch):
+    called = []
+    monkeypatch.setattr("visitor_intel.notify.deliver", lambda message: called.append(message))
+    monkeypatch.delenv("RESEND_API_KEY", raising=False)
+    client = app.test_client()
+    unlock(client)
+    assert called == []

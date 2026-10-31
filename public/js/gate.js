@@ -1,39 +1,9 @@
 (function () {
   var gate = document.getElementById("gate");
   var button = document.getElementById("gate-enable");
-  var copy = document.getElementById("gate-copy");
   var status = document.getElementById("gate-status");
-  var guideText = document.getElementById("guide-text");
   var token = (document.querySelector('meta[name="csrf-token"]') || {}).content || "";
   var busy = false;
-  var originalCopy = copy.textContent;
-
-  var guides = {
-    "ios-safari": "On iPhone, Safari shows its own prompt near the top or bottom of the page. Tap Allow on that prompt. If you previously blocked it, open the aA menu or Settings → Safari → Location, allow this site, then tap retry.",
-    "android-chrome": "On Android, Chrome shows its own prompt near the top of the browser. Tap Allow on that prompt. If it is blocked, tap the lock icon in the address bar, open Permissions, set Location to Allow, then tap retry.",
-    "desktop-chrome": "On desktop Chrome, the real prompt appears at the top left of the address bar. Choose Allow there. If it is blocked, click the lock icon, open Site settings, set Location to Allow, then tap retry.",
-    "desktop-edge": "On desktop Edge, the real prompt appears at the top left of the address bar. Choose Allow there. If it is blocked, click the lock icon, open site permissions, set Location to Allow, then tap retry.",
-    "desktop-safari": "On desktop Safari, the real prompt appears at the top of the window. Choose Allow. If it is blocked, open Safari → Settings → Websites → Location and allow this site, then tap retry.",
-    other: "Your browser will show its own location prompt. Choose Allow on that prompt. This page cannot grant permission for you. If you blocked it earlier, allow location for this site in the browser settings, then tap retry."
-  };
-
-  function guideKey() {
-    var ua = navigator.userAgent || "";
-    var iOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
-    var edge = /Edg\//.test(ua);
-    var chrome = /Chrome\//.test(ua) && !edge;
-    var safari = /Safari\//.test(ua) && !chrome && !edge;
-    if (iOS) return "ios-safari";
-    if (/Android/.test(ua)) return "android-chrome";
-    if (edge) return "desktop-edge";
-    if (chrome) return "desktop-chrome";
-    if (safari) return "desktop-safari";
-    return "other";
-  }
-
-  var detected = guideKey();
-  gate.classList.add("is-" + detected.split("-")[0]);
-  guideText.textContent = guides[detected];
 
   function setState(name, message, isError) {
     gate.dataset.state = name;
@@ -108,13 +78,11 @@
       }).catch(function (error) {
         busy = false;
         button.disabled = false;
-        button.textContent = "RETRY";
-        setState("SERVER_ERROR", error.message && error.message !== "server" ? error.message : "The server could not save the location check. Nothing was unlocked. Retry in a moment.", true);
+        setState("SERVER_ERROR", error.message && error.message !== "server" ? error.message : "The server could not save the location check. Nothing was unlocked. Try again in a moment.", true);
       });
     }, function (error) {
       busy = false;
       button.disabled = false;
-      button.textContent = "RETRY";
       if (error && error.code === 1) {
         classifyDenial(function (kind) {
           if (kind === "dismissed") {
@@ -128,7 +96,7 @@
         return;
       }
       if (error && error.code === 3) {
-        setState("LOCATION_TIMEOUT", "The location request timed out. Retry when the signal is clearer.", true);
+        setState("LOCATION_TIMEOUT", "The location request timed out. Try again when the signal is clearer.", true);
         report("timeout");
         return;
       }
@@ -158,14 +126,10 @@
     return;
   }
   setState("PERMISSION_REQUIRED", "");
-  copy.textContent = originalCopy;
   if (navigator.permissions && navigator.permissions.query) {
     navigator.permissions.query({ name: "geolocation" }).then(function (result) {
       if (result.state === "denied") {
-        setState("PERMISSION_DENIED", "Location permission is already blocked for this site. Allow it in the browser settings, then retry. The portfolio stays closed until then.", true);
-        button.textContent = "RETRY";
-      } else if (result.state === "granted") {
-        setState("PERMISSION_REQUIRED", "This browser already allows location. Continue to share one current reading. A remembered permission is not treated as a fresh location.");
+        setState("PERMISSION_DENIED", "Location permission is already blocked for this site. Allow it in the browser settings, then try again.", true);
       }
     }).catch(function () {});
   }
