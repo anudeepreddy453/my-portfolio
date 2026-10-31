@@ -143,6 +143,9 @@ def csrf_ok() -> bool:
 
 
 def render_gate(status: int = 200):
+    page = getattr(render_gate, "page", None)
+    if page is not None:
+        return page(status)
     response = make_response(
         render_template(
             "gate.html",

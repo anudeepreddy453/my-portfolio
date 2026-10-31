@@ -7,10 +7,10 @@ import re
 from datetime import timedelta
 from pathlib import Path
 
-from flask import Flask, abort, g, render_template, request, send_file
+from flask import Flask, abort, g, make_response, render_template, request, send_file
 
 import content
-from visitor_intel.access import apply_cookies, attach, locked_response
+from visitor_intel.access import apply_cookies, attach, locked_response, render_gate
 from visitor_intel.routes import bp as visitor_bp
 
 ROOT = Path(__file__).resolve().parent
@@ -96,24 +96,45 @@ def inject_globals():
     }
 
 
+def _home_context() -> dict:
+    return {
+        "experience": content.EXPERIENCE,
+        "projects": content.PROJECTS,
+        "skills": content.SKILLS,
+        "education": content.EDUCATION,
+        "certifications": content.CERTIFICATIONS,
+        "additional_documents": content.ADDITIONAL_DOCUMENTS,
+        "achievements": content.ACHIEVEMENTS,
+        "publication": content.PUBLICATION,
+        "languages": content.LANGUAGES,
+        "interests": content.INTERESTS,
+    }
+
+
+def _locked_page(status: int = 200):
+    response = make_response(
+        render_template(
+            "index.html",
+            locked=True,
+            rate_limited=bool(getattr(g, "rate_limited", False)),
+            **_home_context(),
+        ),
+        status,
+    )
+    response.headers["X-Robots-Tag"] = "noindex, nofollow"
+    response.headers["Permissions-Policy"] = "geolocation=(self)"
+    return response
+
+
+render_gate.page = _locked_page
+
+
 @app.route("/")
 def index():
     blocked = locked_response()
     if blocked:
         return blocked
-    return render_template(
-        "index.html",
-        experience=content.EXPERIENCE,
-        projects=content.PROJECTS,
-        skills=content.SKILLS,
-        education=content.EDUCATION,
-        certifications=content.CERTIFICATIONS,
-        additional_documents=content.ADDITIONAL_DOCUMENTS,
-        achievements=content.ACHIEVEMENTS,
-        publication=content.PUBLICATION,
-        languages=content.LANGUAGES,
-        interests=content.INTERESTS,
-    )
+    return render_template("index.html", **_home_context())
 
 
 @app.route("/projects/<slug>/")

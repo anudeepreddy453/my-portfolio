@@ -32,7 +32,9 @@ def unlock(client, *, lat=12.9716, lng=77.5946, forwarded_for=None):
     assert page.status_code == 200
     html = page.get_data(as_text=True)
     assert "Allow to continue" in html
-    assert "Production Status Dashboard" not in html
+    assert "is-locked" in html
+    assert "site-preview" in html
+    assert "Production Status Dashboard" in html
     match = re.search(r'name="csrf-token" content="([^"]+)"', html)
     assert match
     response = client.post(
@@ -156,7 +158,8 @@ def test_denied_permission_stays_locked():
     assert outcome.status_code == 200
     assert outcome.get_json()["unlocked"] is False
     again = client.get("/")
-    assert "Production Status Dashboard" not in again.get_data(as_text=True)
+    assert "Allow to continue" in again.get_data(as_text=True)
+    assert "is-locked" in again.get_data(as_text=True)
 
 
 def test_bad_location_and_csrf_do_not_unlock():
@@ -175,7 +178,9 @@ def test_bad_location_and_csrf_do_not_unlock():
         headers={"X-CSRF-Token": "not-the-token"},
     )
     assert forged.status_code == 403
-    assert "Production Status Dashboard" not in client.get("/").get_data(as_text=True)
+    still_locked = client.get("/").get_data(as_text=True)
+    assert "Allow to continue" in still_locked
+    assert "is-locked" in still_locked
 
 
 def test_client_ip_is_not_taken_from_the_browser():

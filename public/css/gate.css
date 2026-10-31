@@ -1,137 +1,104 @@
-/* Location gate — glass card over the existing village photograph. */
+/* Locked portfolio: the real page stays visible, blurred, under an iOS control. */
 
-:root {
-  --gold: #e2c48a;
-  --gold-deep: #b8944d;
-  --ink: #f7f4ee;
-  --muted: #d9d3c7;
-  --danger: #f0c2b8;
-}
-
-* { box-sizing: border-box; }
-
-html, body {
+body.is-locked {
   margin: 0;
-  min-height: 100%;
-  background: #090a0d;
-  color: var(--ink);
-  font-family: "Source Sans 3", "Segoe UI", sans-serif;
+  height: 100dvh;
+  overflow: hidden;
+  background: #0d0e12;
 }
 
-.gate {
-  min-height: 100dvh;
+.site-preview {
+  height: 100dvh;
+  overflow: hidden;
+  filter: blur(16px) saturate(1.12);
+  transform: scale(1.06);
+  transform-origin: center top;
+  pointer-events: none;
+  user-select: none;
+}
+
+.gate-shade {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
   display: grid;
   place-items: center;
-  padding: 1.25rem 1rem;
-  position: relative;
-  overflow: hidden;
-}
-
-.gate-bg {
-  position: absolute;
-  inset: -2rem;
-  filter: blur(18px) saturate(0.85);
-  transform: scale(1.06);
-}
-
-.gate-bg img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.gate-bg-copy {
-  position: absolute;
-  inset: auto 0 12%;
-  text-align: center;
-  font-family: Fraunces, Georgia, serif;
-  letter-spacing: -0.03em;
-}
-
-.gate-bg-copy p {
-  margin: 0;
-  font-size: clamp(2.4rem, 8vw, 5.5rem);
-  color: rgba(247, 244, 238, 0.82);
-}
-
-.gate-bg-copy p + p {
-  margin-top: 0.25rem;
-  font-family: "Source Sans 3", sans-serif;
-  font-size: 1rem;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-}
-
-.gate-dim {
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(ellipse at center, rgba(8, 9, 12, 0.28), rgba(8, 9, 12, 0.72)),
-    linear-gradient(to bottom, rgba(8, 9, 12, 0.25), rgba(8, 9, 12, 0.55));
+  padding: 1.25rem;
+  background: rgba(0, 0, 0, 0.08);
 }
 
 .gate-card {
-  position: relative;
-  z-index: 1;
-  width: min(22rem, 100%);
-  padding: 1.15rem 1.15rem 1.05rem;
-  border-radius: 22px;
-  background: linear-gradient(180deg, rgba(255, 252, 248, 0.16), rgba(18, 19, 24, 0.46));
-  border: 1px solid rgba(255, 255, 255, 0.28);
+  width: min(21rem, 100%);
+  padding: 0.55rem;
+  border-radius: 28px;
+  background: rgba(255, 255, 255, 0.22);
+  border: 1px solid rgba(255, 255, 255, 0.38);
   box-shadow:
-    0 30px 80px rgba(0, 0, 0, 0.38),
-    inset 0 1px 0 rgba(255, 255, 255, 0.45);
-  backdrop-filter: blur(22px) saturate(1.45);
-  -webkit-backdrop-filter: blur(22px) saturate(1.45);
-  animation: gate-in 560ms ease;
+    0 18px 50px rgba(0, 0, 0, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(28px) saturate(180%);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  animation: gate-in 420ms ease;
 }
 
-.gate.is-unlocking .gate-card { opacity: 0; transform: translateY(8px); transition: 280ms ease; }
-.gate.is-unlocking .gate-bg { filter: blur(0); transition: 280ms ease; }
-
-.gate-card p { margin: 0 0 0.75rem; color: var(--muted); line-height: 1.5; }
-
 .gate-status {
-  margin: 0 0 0.75rem;
-  color: var(--ink);
-  font-size: 0.95rem;
+  margin: 0.35rem 0.7rem 0.55rem;
+  color: #1c1c1e;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
+  font-size: 0.92rem;
+  line-height: 1.35;
+  text-align: center;
 }
 
 .gate-status:empty { display: none; }
-
-.gate-status.is-error { color: var(--danger); }
+.gate-status.is-error { color: #ff453a; }
 
 .gate-button {
   width: 100%;
-  min-height: 3rem;
+  min-height: 3.25rem;
   border: 0;
-  border-radius: 999px;
-  background: linear-gradient(180deg, #f0d7a4, var(--gold-deep));
-  color: #1b160f;
-  font: 700 1rem/1 "Source Sans 3", sans-serif;
-  letter-spacing: 0.01em;
+  border-radius: 16px;
+  background: #0a84ff;
+  color: #fff;
+  font: 600 1.05rem/1 -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
+  letter-spacing: -0.015em;
   cursor: pointer;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.28);
 }
 
-.gate-button:disabled { opacity: 0.55; cursor: progress; }
+.gate-button:hover { background: #0077ed; }
+.gate-button:active { transform: scale(0.985); background: #006edb; }
+.gate-button:disabled { opacity: 0.55; cursor: progress; transform: none; }
 
 .gate-button:focus-visible {
-  outline: 2px solid var(--gold);
+  outline: 3px solid rgba(10, 132, 255, 0.45);
   outline-offset: 3px;
 }
 
-.gate-noscript { font-size: 0.88rem; }
+.gate-noscript {
+  margin: 0.6rem 0.4rem 0.25rem;
+  color: #1c1c1e;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
+  font-size: 0.88rem;
+  text-align: center;
+}
+
+body.is-unlocking .site-preview {
+  filter: none;
+  transform: none;
+  transition: filter 280ms ease, transform 280ms ease;
+}
+
+body.is-unlocking .gate-shade {
+  opacity: 0;
+  transition: opacity 280ms ease;
+}
 
 @keyframes gate-in {
-  from { opacity: 0; transform: translateY(10px) scale(0.98); }
+  from { opacity: 0; transform: translateY(8px) scale(0.98); }
   to { opacity: 1; transform: none; }
 }
 
-@media (max-width: 360px) {
-  .gate-card { padding: 1rem 0.9rem 0.9rem; }
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .gate-card { animation: none; }
+  .gate-card, body.is-unlocking .site-preview, body.is-unlocking .gate-shade { animation: none; transition: none; }
 }
